@@ -9,6 +9,10 @@ const categoryItemSchema = new mongoose.Schema({
     image: {
         type: String,
         required: [true , 'a category item must have a image'],
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
     }
 });
 
