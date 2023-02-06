@@ -22,7 +22,18 @@ exports.createCategoryItem = async (req, res) => {
 
 exports.getCategories = async (req, res) => {
     try {
-        const categories = await CategoryItem.find();
+        // console.log(req.query);
+        // BUILD QUERY 
+        const queryObj = { ...req.query };
+        const excludeFields = ['page', 'sort', 'limit', 'fields','duration'];
+        excludeFields.forEach(el => delete queryObj[el]);
+
+        const query = CategoryItem.find(queryObj);
+
+        // EXECUTE QUERY
+        const categories = await query;
+
+        // SEND RESPONSE 
         res.status(200).json({
             status: 'success',
             results: categories.length,
