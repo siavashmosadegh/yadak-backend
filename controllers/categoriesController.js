@@ -23,19 +23,25 @@ exports.createCategoryItem = async (req, res) => {
 exports.getCategories = async (req, res) => {
     try {
         // BUILD QUERY
-        // 1) Filtering
+        // 1A) Filtering
         const queryObj = { ...req.query };
         const excludeFields = ['page', 'sort', 'limit', 'fields'];
         excludeFields.forEach(el => delete queryObj[el]);
 
-        // 2) Advanced Filtering
+        // 1B) Advanced Filtering
         let queryStr = JSON.stringify(queryObj);
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-        console.log(JSON.parse(queryStr));
 
-        const query = CategoryItem.find(queryObj);
+        let query = CategoryItem.find(queryObj);
 
-        console.log(JSON.parse(queryStr));
+        // 2) Sorting
+        if (req.query.sort) {
+            const sortBy = req.query.sort.split(',').join(' ');
+            query = query.sort(sortBy);
+            console.log(sortBy);
+        } else {
+            query = query.sort('-createdAt');
+        }
 
         // EXECUTE QUERY
         const categories = await query;
