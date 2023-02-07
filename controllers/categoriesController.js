@@ -50,6 +50,18 @@ exports.getCategories = async (req, res) => {
             query = query.select('-__v');
         }
 
+        // 4) Pagination
+        const page = req.query.page * 1 || 1; // we want to convert the string to a number
+        const limit = req.query.limit * 1 || 100; // we want to convert the string to a number
+        const skip = (page - 1) * limit;
+
+        query = query.skip(skip).limit(limit);
+
+        if (req.query.page) {
+            const numCategories = await CategoryItem.countDocuments();
+            if (skip >= numCategories) throw new Error('this page does not exist');
+        }
+
         // EXECUTE QUERY
         const categories = await query;
 
