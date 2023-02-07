@@ -3,6 +3,10 @@ const categoriesController = require('../controllers/categoriesController');
 
 const router = express.Router();
 
+// router
+//     .route('/top-5-cheap')
+//     .get(categoriesController.aliasTopTour, categoriesController.getCategories);
+
 router
     .route('/')
     .get(categoriesController.getCategories)
